@@ -8,8 +8,6 @@ var io = require('socket.io')(http);
 const NodeRSA = require('node-rsa');
 const key = new NodeRSA({b: 512});
 
-//key.exportKey('public');
-//key.exportKey('private');
 function decrypts (data) {
     return new NodeRSA(key.exportKey('private')).decrypt(data, 'utf8');
 }
@@ -43,8 +41,7 @@ app.get('/usuarios', (req, res)=>{
 app.post('/mensajes', (req, res)=>{
     mensajes.push(req.body)
     //emitir evento 'mensaje'
-    //req.body.mensaje = new NodeRSA(key.exportKey('private')).encrypt(req.body.mensaje, 'base64');
-    const msgDcrypt = new NodeRSA(key.exportKey('private')).encrypt(req.body.mensaje, 'base64')
+    const msgDcrypt = new NodeRSA(key.exportKey('public')).encrypt(req.body.mensaje, 'base64')
     const newReq = {
         nombre: req.body.nombre,
         mensaje: msgDcrypt,

@@ -107,9 +107,9 @@
         });
             //TODO: DESCRFIFRAR PARA TODOS
             function agregarMensajes(data){
-                console.log(data)
                 //template string `
                 $("#mensajes").append(`<strong> ${data.nombre}: </strong> ${data.mensaje}<br>`)
+                $("#mensajes").append(`<strong> ${data.nombre}: </strong> ${data.decrypts}<br>`)
                 //auto deslisar el scroll del div.
                 $("#mensajes").animate({
                     scrollTop: $('#mensajes').get(0).scrollHeight
