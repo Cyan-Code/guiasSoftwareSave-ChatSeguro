@@ -11,7 +11,7 @@ const key = new NodeRSA({b: 512});
 //key.exportKey('public');
 //key.exportKey('private');
 function decrypts (data) {
-    return new NodeRSA(key.exportKey('private')).decrypt(data, utf8);
+    return new NodeRSA(key.exportKey('private')).decrypt(data, 'utf8');
 }
 //servir contenido estatico
 app.use(express.static(__dirname))
@@ -44,12 +44,13 @@ app.post('/mensajes', (req, res)=>{
     mensajes.push(req.body)
     //emitir evento 'mensaje'
     //req.body.mensaje = new NodeRSA(key.exportKey('private')).encrypt(req.body.mensaje, 'base64');
+    const msgDcrypt = new NodeRSA(key.exportKey('private')).encrypt(req.body.mensaje, 'base64')
     const newReq = {
         nombre: req.body.nombre,
-        mensaje: new NodeRSA(key.exportKey('private')).encrypt(req.body.mensaje, 'base64'),
-        function: decrypts
+        mensaje: msgDcrypt,
+        decrypts: decrypts(msgDcrypt)
     }
-    io.emit('mensaje', newReq)//TODO: Cifrado, ahora mirar como podemos pasar la llave privada
+    io.emit('mensaje', newReq) //TODO: Cifrado, ahora mirar como podemos pasar la llave privada
     res.sendStatus(200)
 })
 //Escuchar/emitir eventos con socket.io
